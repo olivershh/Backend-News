@@ -85,7 +85,7 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe.only("/api/users", () => {
+describe("/api/users", () => {
   describe("GET:", () => {
     test("200: response follows correct format {users: [...users]}", () => {
       return request(app)
@@ -103,7 +103,6 @@ describe.only("/api/users", () => {
         .then((response) => {
           const { body } = response;
 
-          console.log(body.users);
           expect(body.users.length !== 0).toBe(true);
 
           body.users.forEach((user) => {
