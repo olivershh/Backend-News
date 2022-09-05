@@ -3,12 +3,14 @@ const app = express();
 
 const { getTopics } = require("./controllers/topics.controllers");
 const { getArticleById } = require("./controllers/articles.controllers");
-const {} = require("./controllers/users.controllers");
+const { getUsers } = require("./controllers/users.controllers");
 const {} = require("./controllers/comments.controllers");
 
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", getArticleById);
+
+app.use("/api/users", getUsers);
 
 app.use((err, req, res, next) => {
   const errorCodes = ["22P02"];
@@ -23,8 +25,9 @@ app.use((err, req, res, next) => {
   if (err.status && err.msg) {
     res.status(err.status);
     res.send({ msg: err.msg });
+  } else {
+    next(err);
   }
-  next(err);
 });
 
 app.use((err, req, res, next) => {
