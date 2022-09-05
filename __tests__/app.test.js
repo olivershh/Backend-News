@@ -19,7 +19,7 @@ describe("/api/topics", () => {
           expect(body.hasOwnProperty("topics")).toBe(true);
         });
     });
-    test("200: returns array of topics with slug and description", () => {
+    test("200: returns array of topic objects with correct properties and data types", () => {
       return request(app)
         .get("/api/topics")
         .expect(200)
@@ -35,5 +35,18 @@ describe("/api/topics", () => {
           });
         });
     });
+  });
+});
+
+describe("/api/articles/:article_id", () => {
+  describe("GET:", () => {
+    test.todo("200: Response follows correct format {article: {...article}}");
+    test.todo("200: Article has all properties with correct data type");
+    test.todo(
+      "400: If article number does not exist, bad request error is returned."
+    );
+    test.todo(
+      '400: If article number is invalid e.g. "_five_", bad request error is returned'
+    );
   });
 });
