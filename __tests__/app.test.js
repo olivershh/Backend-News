@@ -19,22 +19,20 @@ describe("/api/topics", () => {
           expect(body.hasOwnProperty("topics")).toBe(true);
         });
     });
-    test("200: returns array of topics", () => {
+    test("200: returns array of topics with slug and description", () => {
       return request(app)
         .get("/api/topics")
         .expect(200)
         .then((response) => {
           const { body } = response;
 
-          expect(body.topics).not.toEqual([]);
+          expect(body.topics.length !== 0).toBe(true);
 
-          const correctKeys = body.topics.every((topic) => {
-            return (
-              topic.hasOwnProperty("slug") &&
-              topic.hasOwnProperty("description")
-            );
+          body.topics.forEach((topic) => {
+            expect(topic).toHaveProperty("slug", expect.any(String));
+            expect(topic).toHaveProperty("description", expect.any(String));
+            expect(Object.keys(topic).length).toBe(2);
           });
-          expect(correctKeys).toBe(true);
         });
     });
   });
