@@ -1,10 +1,10 @@
 const express = require("express");
 const app = express();
 
-const { getTopics } = require("./controllers/topics.controllers");
-const { getArticleById } = require("./controllers/articles.controllers");
-const { getUsers } = require("./controllers/users.controllers");
-const {} = require("./controllers/comments.controllers");
+const { getTopics } = require("./controllers/topics.controller");
+const { getArticleById } = require("./controllers/articles.controller");
+const { getUsers } = require("./controllers/users.controller");
+const {} = require("./controllers/comments.controller");
 
 app.get("/api/topics", getTopics);
 
