@@ -64,13 +64,13 @@ describe("/api/articles/:article_id", () => {
           expect(body.article).toHaveProperty("votes", expect.any(Number));
         });
     });
-    test("400: If article number does not exist, bad request error is returned.", () => {
+    test("404: If article number does not exist, 'Article not found' message is returned.", () => {
       return request(app)
         .get("/api/articles/123456")
-        .expect(400)
+        .expect(404)
         .then((response) => {
           const { body } = response;
-          expect(body).toEqual({ msg: "bad request" });
+          expect(body).toEqual({ msg: "Article not found" });
         });
     });
     test("400: If article number is invalid, bad request error is returned.", () => {

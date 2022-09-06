@@ -1,7 +1,3 @@
 node_modules
 .env.*
-<<<<<<< HEAD
-.scrap.*
-=======
 scrap.*
->>>>>>> 6d56cc04ae41763102dc607278f6f881102a69e7
