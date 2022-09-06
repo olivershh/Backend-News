@@ -137,7 +137,6 @@ describe("/api/articles/:article_id", () => {
         .expect(400)
         .then((response) => {
           const { body } = response;
-          console.log(body);
           expect(body).toEqual({ msg: "bad request" });
         });
     });
