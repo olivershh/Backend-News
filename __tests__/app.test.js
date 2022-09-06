@@ -38,6 +38,18 @@ describe("/api/topics", () => {
   });
 });
 
+describe("/api/articles", () => {
+  describe("GET:", () => {
+    test.skip("200: response follows correct format {articles: [...articles]}", () => {});
+    test.skip("200: returns array of topic objects with correct properties and data types", () => {});
+    test.skip("200: articles with 0 comments have comment count property of 0", () => {});
+    test.skip("200: articles are sorted by date in descending order", () => {});
+    test.skip("200: articles are filtered by topic, if provided", () => {});
+    test.skip("200: returns an empty array when topic exists but no relevant articles exist", () => {});
+    test.skip("400: when topic doesn't exist, {msg: <topic> does not exist} is returned", () => {});
+  });
+});
+
 describe("/api/articles/:article_id", () => {
   describe("GET:", () => {
     test("200: Response follows correct format {article: {...article}}", () => {

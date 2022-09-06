@@ -1,6 +1,7 @@
 const {
   selectArticleById,
   updateArticleById,
+  getArticles,
 } = require("../models/articles.model");
 
 exports.getArticleById = (req, res, next) => {
@@ -23,3 +24,5 @@ exports.patchArticleById = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.getArticles = () => {};
