@@ -51,17 +51,36 @@ describe("/api/articles/:article_id", () => {
     });
     test("200: Article has all properties with correct data type", () => {
       return request(app)
-        .get("/api/articles/4")
+        .get("/api/articles/3")
         .expect(200)
         .then((response) => {
           const { body } = response;
           expect(body.article).toHaveProperty("author", expect.any(String));
           expect(body.article).toHaveProperty("title", expect.any(String));
-          expect(body.article).toHaveProperty("article_id", 4);
+          expect(body.article).toHaveProperty("article_id", 3);
           expect(body.article).toHaveProperty("body", expect.any(String));
           expect(body.article).toHaveProperty("topic", expect.any(String));
           expect(body.article).toHaveProperty("created_at", expect.any(String));
           expect(body.article).toHaveProperty("votes", expect.any(Number));
+          expect(body.article).toHaveProperty("comment_count", 2);
+        });
+    });
+    test("200: Comment count is accurate", () => {
+      return request(app)
+        .get("/api/articles/9")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body.article).toHaveProperty("comment_count", 2);
+        });
+    });
+    test("200: Comment count is accurate for 0 comments", () => {
+      return request(app)
+        .get("/api/articles/2")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body.article).toHaveProperty("comment_count", 0);
         });
     });
     test("404: If article number does not exist, 'Article not found' message is returned.", () => {
