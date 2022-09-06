@@ -83,7 +83,7 @@ describe("/api/articles/:article_id", () => {
         });
     });
   });
-  describe.only("PATCH:", () => {
+  describe("PATCH:", () => {
     test("201: response follows correct format {article: {...article}", () => {
       return request(app)
         .patch("/api/articles/2")
@@ -91,7 +91,6 @@ describe("/api/articles/:article_id", () => {
         .expect(201)
         .then((response) => {
           const { body } = response;
-          console.log(body);
           expect(body).toEqual(
             expect.objectContaining({ article: expect.any(Object) })
           );
@@ -113,7 +112,7 @@ describe("/api/articles/:article_id", () => {
           expect(body.article).toHaveProperty("votes", 100);
         });
     });
-    test.skip("404: If article number does not exist, 'Article not found' message is returned.", () => {
+    test("404: If article number does not exist, 'Article not found' message is returned.", () => {
       return request(app)
         .patch("/api/articles/123456")
         .send({ inc_votes: 100 })
@@ -123,7 +122,26 @@ describe("/api/articles/:article_id", () => {
           expect(body).toEqual({ msg: "Article not found" });
         });
     });
-    test.todo("400: if article id is invalid, bad request error is returned");
+    test("400: if article id is invalid, bad request error is returned", () => {
+      return request(app)
+        .patch("/api/articles/notvalid;")
+        .send({ inc_votes: 100 })
+        .expect(400)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "bad request" });
+        });
+    });
+    test("400: if votes is invalid, bad request error is returned", () => {
+      return request(app)
+        .patch("/api/articles/10;")
+        .send({ inc_votes: "notanumber" })
+        .expect(400)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "bad request" });
+        });
+    });
   });
 });
 
