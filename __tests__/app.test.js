@@ -74,7 +74,7 @@ describe("/api/articles/:article_id", () => {
           expect(body.article).toHaveProperty("comment_count", 2);
         });
     });
-    test("200: Comment count is accurate for 0 comments", () => {
+    test("200: Comment count is accurate for articles with 0 comments", () => {
       return request(app)
         .get("/api/articles/2")
         .expect(200)
