@@ -103,7 +103,7 @@ describe("/api/users", () => {
         .then((response) => {
           const { body } = response;
 
-          expect(body.users.length !== 0).toBe(true);
+          expect(body.users.length === 4).toBe(true);
 
           body.users.forEach((user) => {
             expect(user).toHaveProperty("username", expect.any(String));
