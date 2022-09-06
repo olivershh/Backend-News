@@ -83,6 +83,64 @@ describe("/api/articles/:article_id", () => {
         });
     });
   });
+  describe("PATCH:", () => {
+    test("200: article votes are updated and updated object returned", () => {
+      return request(app)
+        .patch("/api/articles/4")
+        .send({ inc_votes: 100 })
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body.article).toHaveProperty("author", expect.any(String));
+          expect(body.article).toHaveProperty("title", expect.any(String));
+          expect(body.article).toHaveProperty("article_id", 4);
+          expect(body.article).toHaveProperty("body", expect.any(String));
+          expect(body.article).toHaveProperty("topic", expect.any(String));
+          expect(body.article).toHaveProperty("created_at", expect.any(String));
+          expect(body.article).toHaveProperty("votes", 100);
+        });
+    });
+    test("404: If article number does not exist, 'Article not found' message is returned.", () => {
+      return request(app)
+        .patch("/api/articles/123456")
+        .send({ inc_votes: 100 })
+        .expect(404)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "Article not found" });
+        });
+    });
+    test("400: if article id is invalid, bad request error is returned", () => {
+      return request(app)
+        .patch("/api/articles/notvalid;")
+        .send({ inc_votes: 100 })
+        .expect(400)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "bad request" });
+        });
+    });
+    test("400: if votes is invalid, bad request error is returned", () => {
+      return request(app)
+        .patch("/api/articles/10;")
+        .send({ inc_votes: "notanumber" })
+        .expect(400)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "bad request" });
+        });
+    });
+    test("400: if patch object is wrong format, returns bad request error", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ propertyInvalid: 1 })
+        .expect(400)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "bad request" });
+        });
+    });
+  });
 });
 
 describe("/api/users", () => {

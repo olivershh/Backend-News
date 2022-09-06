@@ -11,3 +11,18 @@ exports.selectArticleById = (articleID) => {
       return article;
     });
 };
+
+exports.updateArticleById = (articleId, votes) => {
+  return db
+    .query(
+      "UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *",
+      [votes, articleId]
+    )
+    .then((queryData) => {
+      const article = queryData.rows[0];
+      if (!article) {
+        return Promise.reject({ status: 404, msg: "Article not found" });
+      }
+      return article;
+    });
+};
