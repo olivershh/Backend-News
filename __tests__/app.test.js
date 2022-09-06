@@ -84,23 +84,11 @@ describe("/api/articles/:article_id", () => {
     });
   });
   describe("PATCH:", () => {
-    test("201: response follows correct format {article: {...article}", () => {
-      return request(app)
-        .patch("/api/articles/2")
-        .send({ inc_votes: 10 })
-        .expect(201)
-        .then((response) => {
-          const { body } = response;
-          expect(body).toEqual(
-            expect.objectContaining({ article: expect.any(Object) })
-          );
-        });
-    });
-    test("201: article votes are updated and updated object returned", () => {
+    test("200: article votes are updated and updated object returned", () => {
       return request(app)
         .patch("/api/articles/4")
         .send({ inc_votes: 100 })
-        .expect(201)
+        .expect(200)
         .then((response) => {
           const { body } = response;
           expect(body.article).toHaveProperty("author", expect.any(String));
@@ -139,6 +127,17 @@ describe("/api/articles/:article_id", () => {
         .expect(400)
         .then((response) => {
           const { body } = response;
+          expect(body).toEqual({ msg: "bad request" });
+        });
+    });
+    test("400: if patch object is wrong format, returns bad request error", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ propertyInvalid: 1 })
+        .expect(400)
+        .then((response) => {
+          const { body } = response;
+          console.log(body);
           expect(body).toEqual({ msg: "bad request" });
         });
     });
