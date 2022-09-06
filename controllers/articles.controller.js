@@ -1,4 +1,7 @@
-const { selectArticleById } = require("../models/articles.model");
+const {
+  selectArticleById,
+  updateArticleById,
+} = require("../models/articles.model");
 
 exports.getArticleById = (req, res, next) => {
   const articleID = req.params.article_id;
@@ -8,4 +11,13 @@ exports.getArticleById = (req, res, next) => {
       res.status(200).send({ article: article });
     })
     .catch(next);
+};
+
+exports.patchArticleById = (req, res, next) => {
+  const articleID = req.params.article_id;
+  const votes = req.body.inc_votes;
+
+  updateArticleById(articleID, votes).then((article) => {
+    res.status(201).send({ article: article });
+  });
 };

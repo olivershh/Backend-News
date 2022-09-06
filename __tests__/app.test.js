@@ -83,6 +83,48 @@ describe("/api/articles/:article_id", () => {
         });
     });
   });
+  describe.only("PATCH:", () => {
+    test("201: response follows correct format {article: {...article}", () => {
+      return request(app)
+        .patch("/api/articles/2")
+        .send({ inc_votes: 10 })
+        .expect(201)
+        .then((response) => {
+          const { body } = response;
+          console.log(body);
+          expect(body).toEqual(
+            expect.objectContaining({ article: expect.any(Object) })
+          );
+        });
+    });
+    test("201: article votes are updated and updated object returned", () => {
+      return request(app)
+        .patch("/api/articles/4")
+        .send({ inc_votes: 100 })
+        .expect(201)
+        .then((response) => {
+          const { body } = response;
+          expect(body.article).toHaveProperty("author", expect.any(String));
+          expect(body.article).toHaveProperty("title", expect.any(String));
+          expect(body.article).toHaveProperty("article_id", 4);
+          expect(body.article).toHaveProperty("body", expect.any(String));
+          expect(body.article).toHaveProperty("topic", expect.any(String));
+          expect(body.article).toHaveProperty("created_at", expect.any(String));
+          expect(body.article).toHaveProperty("votes", 100);
+        });
+    });
+    test.skip("404: If article number does not exist, 'Article not found' message is returned.", () => {
+      return request(app)
+        .patch("/api/articles/123456")
+        .send({ inc_votes: 100 })
+        .expect(404)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "Article not found" });
+        });
+    });
+    test.todo("400: if article id is invalid, bad request error is returned");
+  });
 });
 
 describe("/api/users", () => {
