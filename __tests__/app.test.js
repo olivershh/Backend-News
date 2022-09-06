@@ -40,7 +40,16 @@ describe("/api/topics", () => {
 
 describe("/api/articles", () => {
   describe("GET:", () => {
-    test.skip("200: response follows correct format {articles: [...articles]}", () => {});
+    test("200: response follows correct format {articles: [...articles]}", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          console.log(body);
+          expect(body).toHaveProperty("articles", expect.any(Array));
+        });
+    });
     test.skip("200: returns array of topic objects with correct properties and data types", () => {});
     test.skip("200: articles with 0 comments have comment count property of 0", () => {});
     test.skip("200: articles are sorted by date in descending order", () => {});
