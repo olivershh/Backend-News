@@ -16,7 +16,7 @@ describe("/api/topics", () => {
         .expect(200)
         .then((response) => {
           const { body } = response;
-          expect(body.hasOwnProperty("topics")).toBe(true);
+          expect(body).toHaveProperty("topics", expect.any(Array));
         });
     });
     test("200: returns array of topic objects with correct properties and data types", () => {
@@ -33,6 +33,105 @@ describe("/api/topics", () => {
             expect(topic).toHaveProperty("description", expect.any(String));
             expect(Object.keys(topic).length).toBe(2);
           });
+        });
+    });
+  });
+});
+
+describe("/api/articles", () => {
+  describe("GET:", () => {
+    test("200: response follows correct format {articles: [...articles]}", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toHaveProperty("articles", expect.any(Array));
+        });
+    });
+    test("200: returns array of article objects with correct properties and data types", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+
+          expect(body.articles.length === 12).toBe(true);
+          body.articles.forEach((article) => {
+            expect(article).toHaveProperty("author", expect.any(String));
+            expect(article).toHaveProperty("title", expect.any(String));
+            expect(article).toHaveProperty("article_id", expect.any(Number));
+            expect(article).toHaveProperty("topic", expect.any(String));
+            expect(article).toHaveProperty("created_at", expect.any(String));
+            expect(article).toHaveProperty("votes", expect.any(Number));
+            expect(article).toHaveProperty("comment_count", expect.any(Number));
+            expect(Object.keys(article).length).toBe(7);
+          });
+        });
+    });
+    test("200: Comment count is accurate for articles with 0 comments", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          const noCommentArticles = [4, 10, 2, 11, 12, 7, 8];
+          body.articles.forEach((article) => {
+            if (noCommentArticles.includes(article.article_id)) {
+              expect(article.comment_count).toBe(0);
+              // working here
+            }
+          });
+        });
+    });
+    test("200: articles are sorted by date in descending order", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body.articles).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
+    test("200: articles are filtered by topic, if provided", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          body.articles.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                author: expect.any(String),
+                title: expect.any(String),
+                article_id: expect.any(Number),
+                topic: "mitch",
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                comment_count: expect.any(Number),
+              })
+            );
+          });
+        });
+    });
+    test("200: returns an empty array when topic exists but no relevant articles exist", () => {
+      return request(app)
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body.articles).toEqual([]);
+        });
+    });
+    test("404: when topic doesn't exist, {msg: <topic> does not exist} is returned", () => {
+      return request(app)
+        .get("/api/articles?topic=notatopic")
+        .expect(404)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "notatopic does not exist" });
         });
     });
   });
