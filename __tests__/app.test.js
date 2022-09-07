@@ -261,6 +261,14 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
+describe.skip("/articles/:article_id/comments", () => {
+  describe("GET:", () => {
+    test.todo("");
+
+    // continue here, havent started task 9 yet
+  });
+});
+
 describe("/api/users", () => {
   describe("GET:", () => {
     test("200: response follows correct format {users: [...users]}", () => {
