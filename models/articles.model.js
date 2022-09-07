@@ -1,6 +1,5 @@
 const db = require("../db/connection");
 const format = require("pg-format");
-const { checkExists } = require("./utils");
 
 exports.selectArticleById = (articleID) => {
   return db

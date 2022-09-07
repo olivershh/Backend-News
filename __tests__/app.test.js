@@ -261,6 +261,17 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
+describe.skip("/api/articles/:article_id/comments", () => {
+  describe("GET:", () => {
+    test("200: returns all comments for revelant article", () => {
+      return request(app).get("./api/articles/:article_id/comments");
+    });
+  });
+  // responds in correct format
+  //returns 404 if article does not exist
+  //returns bad request if article id is invalid
+});
+
 describe("/api/users", () => {
   describe("GET:", () => {
     test("200: response follows correct format {users: [...users]}", () => {
