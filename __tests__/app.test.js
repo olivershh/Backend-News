@@ -79,7 +79,6 @@ describe("/api/articles", () => {
           body.articles.forEach((article) => {
             if (noCommentArticles.includes(article.article_id)) {
               expect(article.comment_count).toBe(0);
-              // working here
             }
           });
         });
@@ -102,6 +101,7 @@ describe("/api/articles", () => {
         .then((response) => {
           const { body } = response;
           body.articles.forEach((article) => {
+            expect(body.articles.length).toBe(11);
             expect(article).toEqual(
               expect.objectContaining({
                 author: expect.any(String),
