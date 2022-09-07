@@ -16,7 +16,7 @@ describe("/api/topics", () => {
         .expect(200)
         .then((response) => {
           const { body } = response;
-          expect(body.hasOwnProperty("topics")).toBe(true);
+          expect(body).toHaveProperty("topics", expect.any(Array));
         });
     });
     test("200: returns array of topic objects with correct properties and data types", () => {
@@ -46,11 +46,30 @@ describe("/api/articles", () => {
         .expect(200)
         .then((response) => {
           const { body } = response;
-          console.log(body);
           expect(body).toHaveProperty("articles", expect.any(Array));
         });
     });
-    test.skip("200: returns array of topic objects with correct properties and data types", () => {});
+    test.skip("200: returns array of article objects with correct properties and data types", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+
+          expect(body.articles.length === 12).toBe(true);
+          console.log(body);
+          body.articles.forEach((article) => {
+            expect(article).toHaveProperty("author", expect.any(String));
+            expect(article).toHaveProperty("title", expect.any(String));
+            expect(article).toHaveProperty("article_id", expect.any(Number));
+            expect(article).toHaveProperty("topic", expect.any(String));
+            expect(article).toHaveProperty("created_at", expect.any(String));
+            expect(article).toHaveProperty("votes", expect.any(Number));
+            expect(article).toHaveProperty("comment_count", expect.any(Number));
+            expect(Object.keys(article).length).toBe(7);
+          });
+        });
+    });
     test.skip("200: articles with 0 comments have comment count property of 0", () => {});
     test.skip("200: articles are sorted by date in descending order", () => {});
     test.skip("200: articles are filtered by topic, if provided", () => {});
