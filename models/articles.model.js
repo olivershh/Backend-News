@@ -1,5 +1,6 @@
 const db = require("../db/connection");
 const format = require("pg-format");
+const { query } = require("../db/connection");
 
 exports.selectArticleById = (articleID) => {
   return db
@@ -95,5 +96,16 @@ exports.selectCommentsByArticleId = (articleId) => {
       } else {
         return data;
       }
+    });
+};
+
+exports.newCommentByArticleId = (username, commentBody, articleId) => {
+  return db
+    .query(
+      "INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *",
+      [username, commentBody, articleId]
+    )
+    .then((queryData) => {
+      return queryData.rows[0];
     });
 };
