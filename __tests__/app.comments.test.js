@@ -26,7 +26,6 @@ describe("/api/comments/:comment_id", () => {
       .expect(204)
       .then((response) => {
         const { body } = response;
-        console.log(body);
         expect(body).toEqual({});
       });
   });
