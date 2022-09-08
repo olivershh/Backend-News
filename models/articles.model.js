@@ -64,7 +64,34 @@ exports.selectArticles = (topic) => {
         if (data.rowCount > 0) {
           return [];
         }
-        return Promise.reject({ status: 404, msg: "notatopic does not exist" });
+        return Promise.reject({ status: 404, msg: "topic not found" });
+      } else {
+        return data;
+      }
+    });
+};
+
+exports.selectCommentsByArticleId = (articleId) => {
+  return db
+    .query(
+      "SELECT comment_id, body, author, votes, created_at FROM comments WHERE article_id = $1",
+      [articleId]
+    )
+    .then((queryData) => {
+      const comments = queryData.rows;
+      if (comments.length !== 0) return comments;
+      else {
+        return db.query("SELECT * FROM articles WHERE article_id = $1", [
+          articleId,
+        ]);
+      }
+    })
+    .then((data) => {
+      if (data.rowCount !== undefined) {
+        if (data.rowCount > 0) {
+          return [];
+        }
+        return Promise.reject({ status: 404, msg: "article not found" });
       } else {
         return data;
       }
