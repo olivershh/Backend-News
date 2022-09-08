@@ -10,7 +10,7 @@ const {
   postCommentByArticleId,
 } = require("./controllers/articles.controller");
 const { getUsers } = require("./controllers/users.controller");
-const {} = require("./controllers/comments.controller");
+const { deleteCommentById } = require("./controllers/comments.controller");
 const {
   customErrorHandler,
   psqlErrorHandler,
@@ -30,7 +30,10 @@ app.patch("/api/articles/:article_id", patchArticleById);
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 //users
-app.use("/api/users", getUsers);
+app.get("/api/users", getUsers);
+
+//comments
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 //errors
 app.use(psqlErrorHandler);
