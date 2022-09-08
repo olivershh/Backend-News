@@ -9,7 +9,8 @@
     "test": "jest",
     "prepare": "husky install",
     "dev": "node ./db/seeds/run-seed.js && nodemon listen.js",
-    "query": "psql -f scrap.sql > scrap.txt"
+    "query": "psql -f scrap.sql > scrap.txt",
+    "test-watch" : "jest --watch"
   },
   "repository": {
     "type": "git",
