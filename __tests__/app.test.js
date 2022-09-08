@@ -131,7 +131,7 @@ describe("/api/articles", () => {
         .expect(404)
         .then((response) => {
           const { body } = response;
-          expect(body).toEqual({ msg: "notatopic does not exist" });
+          expect(body).toEqual({ msg: "topic not found" });
         });
     });
   });
@@ -261,15 +261,60 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe.skip("/api/articles/:article_id/comments", () => {
+describe("/api/articles/:article_id/comments", () => {
   describe("GET:", () => {
     test("200: returns all comments for revelant article", () => {
-      return request(app).get("./api/articles/:article_id/comments");
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual(
+            expect.objectContaining({ comments: expect.any(Array) })
+          );
+          body.comments.forEach((comment) => {
+            expect(comment.hasOwnProperty("article_id")).toBe(false);
+            expect(comment).toEqual(
+              expect.objectContaining({
+                comment_id: expect.any(Number),
+                body: expect.any(String),
+                author: expect.any(String),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+    test("200: returns empty array if no relevant comments", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+
+          expect(body).toEqual({ comments: [] });
+        });
+    });
+    test("404: If article number does not exist, 'article not found' message is returned.", () => {
+      return request(app)
+        .get("/api/articles/123456/comments")
+        .expect(404)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "article not found" });
+        });
+    });
+    test("400: If article number is invalid, bad request error is returned.", () => {
+      return request(app)
+        .get("/api/articles/;nope/comments")
+        .expect(400)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "bad request" });
+        });
     });
   });
-  // responds in correct format
-  //returns 404 if article does not exist
-  //returns bad request if article id is invalid
 });
 
 describe("/api/users", () => {
