@@ -7,11 +7,11 @@
     "start": "node listen.js",
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
-    "test": "jest",
+    "test": "jest --runInBand",
     "prepare": "husky install",
     "dev": "node ./db/seeds/run-seed.js && nodemon listen.js",
     "query": "psql -f scrap.sql > scrap.txt",
-    "test-watch" : "jest --watch",
+    "test-watch" : "jest --watch --runInBand",
     "seed:prod": "NODE_ENV=production DATABASE_URL=$(heroku config:get DATABASE_URL) npm run seed"
   },
   "repository": {
