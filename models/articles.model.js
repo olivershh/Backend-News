@@ -35,17 +35,34 @@ exports.updateArticleById = (articleId, votes) => {
     });
 };
 
-exports.selectArticles = (topic) => {
+exports.selectArticles = (topic, order = "DESC", sortBy = "created_at") => {
   let topicFilter = "";
   if (topic) {
     topicFilter = format(`WHERE TOPIC = '%I'`, topic);
+  }
+  order = order.toUpperCase();
+  if (!["ASC", "DESC"].includes(order)) {
+    return Promise.reject({ status: 400, msg: "bad request" });
+  }
+  if (
+    ![
+      "article_id",
+      "title",
+      "topic",
+      "author",
+      "body",
+      "created_at",
+      "votes",
+    ].includes(sortBy)
+  ) {
+    return Promise.reject({ status: 400, msg: "bad request" });
   }
 
   return db
     .query(
       `SELECT articles.article_id, title, topic, articles.author, articles.created_at, articles.votes, count(comments.article_id) AS comment_count 
       FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id ${topicFilter}
-      GROUP BY articles.article_id ORDER BY articles.created_at DESC;`
+      GROUP BY articles.article_id ORDER BY ${sortBy.toLowerCase()} ${order.toLowerCase()};`
     )
     .then((queryData) => {
       const articles = queryData.rows;

@@ -29,8 +29,10 @@ exports.patchArticleById = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   const topic = req.query.topic;
+  const order = req.query.order;
+  const sort_by = req.query.sort_by;
 
-  selectArticles(topic)
+  selectArticles(topic, order, sort_by)
     .then((articles) => {
       res.status(200).send({ articles: articles });
     })

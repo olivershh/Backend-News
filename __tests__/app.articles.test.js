@@ -5,7 +5,6 @@ const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
 
 beforeEach(() => seed(testData));
-
 afterAll(() => db.end());
 
 describe("/api/articles", () => {
@@ -53,7 +52,7 @@ describe("/api/articles", () => {
           });
         });
     });
-    test("200: articles are sorted by date in descending order", () => {
+    test("200: articles are sorted by date in descending order if none specified", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -62,6 +61,15 @@ describe("/api/articles", () => {
           expect(body.articles).toBeSortedBy("created_at", {
             descending: true,
           });
+        });
+    });
+    test("200: articles are sorted in ascending order, if requested.", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body.articles).toBeSortedBy("created_at");
         });
     });
     test("200: articles are filtered by topic, if provided", () => {
@@ -102,6 +110,37 @@ describe("/api/articles", () => {
         .then((response) => {
           const { body } = response;
           expect(body).toEqual({ msg: "topic not found" });
+        });
+    });
+    test("200: articles are sorted by specified colum, if valid.", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body.articles).toBeSortedBy("votes", { descending: true });
+        });
+    });
+    test("400: returns 'bad request' if sort_by is not valid", () => {
+      return request(app)
+        .get("/api/articles?sort_by=;notvalid")
+        .expect(400)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "bad request" });
+        });
+    });
+    test("200: requests work with multiple parameters", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes&order=desc&topic=mitch")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body.articles).toBeSortedBy("votes", { descending: true });
+          expect(body.articles.length).toBe(11);
+          body.articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
         });
     });
   });
