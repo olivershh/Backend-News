@@ -33,11 +33,6 @@ app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 app.use("/api/users", getUsers);
 
 //errors
-app.use((err, req, res, next) => {
-  console.log(err);
-  next(err);
-});
-
 app.use(psqlErrorHandler);
 app.use(customErrorHandler);
 app.use(uncaughtErrorHandler);
