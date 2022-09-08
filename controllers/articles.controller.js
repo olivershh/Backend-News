@@ -51,8 +51,6 @@ exports.postCommentByArticleId = (req, res, next) => {
   const article_id = req.params.article_id;
   const username = req.body.username;
   const commentBody = req.body.body;
-  console.log(username);
-  console.log(commentBody);
 
   newCommentByArticleId(username, commentBody, article_id)
     .then((comment) => {
