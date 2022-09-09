@@ -9,7 +9,7 @@ afterAll(() => db.end());
 
 describe("/", () => {
   describe("GET", () => {
-    test("200: returns object of valid endpoints", () => {
+    test("200: Returns object of valid endpoints", () => {
       return request(app)
         .get("/")
         .expect(200)

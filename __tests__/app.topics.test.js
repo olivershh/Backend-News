@@ -10,7 +10,7 @@ afterAll(() => db.end());
 
 describe("/api/topics", () => {
   describe("GET", () => {
-    test("200: response follows correct format {topics: [...topics]}", () => {
+    test("200: Response follows correct format {topics: [...topics]}", () => {
       return request(app)
         .get("/api/topics")
         .expect(200)
@@ -19,7 +19,7 @@ describe("/api/topics", () => {
           expect(body).toHaveProperty("topics", expect.any(Array));
         });
     });
-    test("200: returns array of topic objects with correct properties and data types", () => {
+    test("200: Returns array of topic objects", () => {
       return request(app)
         .get("/api/topics")
         .expect(200)
