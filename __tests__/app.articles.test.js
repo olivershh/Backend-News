@@ -9,7 +9,7 @@ afterAll(() => db.end());
 
 describe("/api/articles", () => {
   describe("GET:", () => {
-    test("200: response follows correct format {articles: [...articles]}", () => {
+    test("200: Response follows correct format {articles: [...articles]}", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -18,7 +18,7 @@ describe("/api/articles", () => {
           expect(body).toHaveProperty("articles", expect.any(Array));
         });
     });
-    test("200: returns array of article objects with correct properties and data types", () => {
+    test("200: Returns array of article objects", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -52,7 +52,7 @@ describe("/api/articles", () => {
           });
         });
     });
-    test("200: articles are sorted by date in descending order if none specified", () => {
+    test("200: Articles sorted by date descending (default)", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -63,7 +63,7 @@ describe("/api/articles", () => {
           });
         });
     });
-    test("200: articles are sorted in ascending order, if requested.", () => {
+    test("200: Articles sorted ascending if requested.", () => {
       return request(app)
         .get("/api/articles?order=asc")
         .expect(200)
@@ -72,7 +72,7 @@ describe("/api/articles", () => {
           expect(body.articles).toBeSortedBy("created_at");
         });
     });
-    test("200: articles are filtered by topic, if provided", () => {
+    test("200: Articles filtered by topic, if provided", () => {
       return request(app)
         .get("/api/articles?topic=mitch")
         .expect(200)
@@ -94,7 +94,7 @@ describe("/api/articles", () => {
           });
         });
     });
-    test("200: returns an empty array when topic exists but no relevant articles exist", () => {
+    test("200: Returns empty array when topic exists but no matching articles", () => {
       return request(app)
         .get("/api/articles?topic=paper")
         .expect(200)
@@ -103,7 +103,7 @@ describe("/api/articles", () => {
           expect(body.articles).toEqual([]);
         });
     });
-    test("404: when topic doesn't exist, {msg: <topic> does not exist} is returned", () => {
+    test("404: {msg: <topic> does not exist} when topic doesn't exist", () => {
       return request(app)
         .get("/api/articles?topic=notatopic")
         .expect(404)
@@ -112,7 +112,7 @@ describe("/api/articles", () => {
           expect(body).toEqual({ msg: "topic not found" });
         });
     });
-    test("200: articles are sorted by specified colum, if valid.", () => {
+    test("200: Articles sorted by column, if valid.", () => {
       return request(app)
         .get("/api/articles?sort_by=votes")
         .expect(200)
@@ -121,7 +121,7 @@ describe("/api/articles", () => {
           expect(body.articles).toBeSortedBy("votes", { descending: true });
         });
     });
-    test("400: returns 'bad request' if sort_by is not valid", () => {
+    test("400: Returns 'bad request' if sort_by is not valid", () => {
       return request(app)
         .get("/api/articles?sort_by=;notvalid")
         .expect(400)
@@ -130,7 +130,7 @@ describe("/api/articles", () => {
           expect(body).toEqual({ msg: "bad request" });
         });
     });
-    test("200: requests work with multiple parameters", () => {
+    test("200: Requests work with multiple parameters", () => {
       return request(app)
         .get("/api/articles?sort_by=votes&order=desc&topic=mitch")
         .expect(200)
@@ -211,7 +211,7 @@ describe("/api/articles/:article_id", () => {
     });
   });
   describe("PATCH:", () => {
-    test("200: article votes are updated and updated object returned", () => {
+    test("200: Article votes are updated and updated object returned", () => {
       return request(app)
         .patch("/api/articles/4")
         .send({ inc_votes: 100 })
@@ -227,7 +227,7 @@ describe("/api/articles/:article_id", () => {
           expect(body.article).toHaveProperty("votes", 100);
         });
     });
-    test("404: If article number does not exist, 'Article not found' message is returned.", () => {
+    test("404: If article number does not exist, 'Article not found' message returned.", () => {
       return request(app)
         .patch("/api/articles/123456")
         .send({ inc_votes: 100 })
@@ -237,7 +237,7 @@ describe("/api/articles/:article_id", () => {
           expect(body).toEqual({ msg: "Article not found" });
         });
     });
-    test("400: if article id is invalid, bad request error is returned", () => {
+    test("400: If article id is invalid, bad request error is returned", () => {
       return request(app)
         .patch("/api/articles/notvalid;")
         .send({ inc_votes: 100 })
@@ -247,7 +247,7 @@ describe("/api/articles/:article_id", () => {
           expect(body).toEqual({ msg: "bad request" });
         });
     });
-    test("400: if votes is invalid, bad request error is returned", () => {
+    test("400: If votes is invalid, bad request error is returned", () => {
       return request(app)
         .patch("/api/articles/10;")
         .send({ inc_votes: "notanumber" })
@@ -257,7 +257,7 @@ describe("/api/articles/:article_id", () => {
           expect(body).toEqual({ msg: "bad request" });
         });
     });
-    test("400: if patch object is wrong format, returns bad request error", () => {
+    test("400: If patch object is wrong format, bad request error is returned", () => {
       return request(app)
         .patch("/api/articles/1")
         .send({ propertyInvalid: 1 })
@@ -272,7 +272,7 @@ describe("/api/articles/:article_id", () => {
 
 describe("/api/articles/:article_id/comments", () => {
   describe("GET:", () => {
-    test("200: returns all comments for revelant article", () => {
+    test("200: Returns all comments for revelant article", () => {
       return request(app)
         .get("/api/articles/1/comments")
         .expect(200)
@@ -295,7 +295,7 @@ describe("/api/articles/:article_id/comments", () => {
           });
         });
     });
-    test("200: returns empty array if no relevant comments", () => {
+    test("200: Returns empty array if no relevant comments", () => {
       return request(app)
         .get("/api/articles/2/comments")
         .expect(200)
@@ -344,7 +344,7 @@ describe("/api/articles/:article_id/comments", () => {
           expect(body.comment).toHaveProperty("created_at", expect.any(String));
         });
     });
-    test("201: comment is added to db", () => {
+    test("201: Comment is added to db", () => {
       const newComment = {
         username: "butter_bridge",
         body: "Wow that's so sick!",
@@ -380,7 +380,7 @@ describe("/api/articles/:article_id/comments", () => {
           expect(body).toEqual({ msg: "does not exist" });
         });
     });
-    test("400: when comment structure is invalid, returns 'bad request'", () => {
+    test("400: When comment structure is invalid, returns 'bad request'", () => {
       const newComment = {
         theAuthorNotUser: "butter_bridge",
         mainBit: "Wow that's so sick!",
@@ -408,7 +408,7 @@ describe("/api/articles/:article_id/comments", () => {
           expect(body).toEqual({ msg: "does not exist" });
         });
     });
-    test("400: when article number is invalid, returns 'bad request'", () => {
+    test("400: When article number is invalid, returns 'bad request'", () => {
       const newComment = {
         username: "butter_bridge",
         body: "Wow that's so sick!",
