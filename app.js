@@ -19,23 +19,18 @@ const {
 
 app.use(express.json());
 
-//topics
 app.get("/api/topics", getTopics);
 
-//articles
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.get("/api/articles", getArticles);
 app.patch("/api/articles/:article_id", patchArticleById);
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
-//users
 app.get("/api/users", getUsers);
 
-//comments
 app.delete("/api/comments/:comment_id", deleteCommentById);
 
-//errors
 app.use(psqlErrorHandler);
 app.use(customErrorHandler);
 app.use(uncaughtErrorHandler);
