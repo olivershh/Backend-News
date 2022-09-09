@@ -1,5 +1,3 @@
-const { RowDescriptionMessage } = require("pg-protocol/dist/messages");
-const { response } = require("./app");
 
 const endpoints = {
   "GET /api/topics": {Description: "Returns all topics", responseSample: {
@@ -46,10 +44,39 @@ const endpoints = {
 		"comment_count": 8
 	}
 } },
-  "PATCH /api/articles/:article_id": {Description: "Updates article votes by article_id and returns article", requestSample:{ inc_votes: 100 }, responseSample:  },
-  "GET /api/articles/:article_id/comments": {Description: "Returns all comments matching article_id", responseSample: },
-  "POST /api/articles/:article_id/comments": {Description: "Post new comment by article_id", responseSample: },
-  "DELETE /api/comments/:comment_id": {Description: "Delete comment by comment_id", responseSample: }
+  "PATCH /api/articles/:article_id": {Description: "Updates article votes by article_id and returns updated article", requestSample:{ "inc_votes": 100 }, responseSample: {
+	"article": {
+		"article_id": 4,
+		"title": "Making sense of Redux",
+		"topic": "coding",
+		"author": "jessjelly",
+		"body": "When I first started learning React, I remember reading lots of articles about the different technologies associated with it. In particular, this one article stood out. It mentions how confusing the ecosystem is, and how developers often feel they have to know ALL of the ecosystem before using React. And as someone who’s used React daily for the past 8 months or so, I can definitely say that I’m still barely scratching the surface in terms of understanding how the entire ecosystem works! But my time spent using React has given me some insight into when and why it might be appropriate to use another technology — Redux (a variant of the Flux architecture).",
+		"created_at": "2020-09-11T20:12:00.000Z",
+		"votes": 600
+	}
+}},
+  "GET /api/articles/:article_id/comments": {Description: "Returns all comments matching article_id", responseSample: {
+	"comments": [
+		{
+			"comment_id": 63,
+			"body": "Est pariatur quis ipsa culpa unde temporibus et accusantium rerum. Consequatur in occaecati aut non similique aut quibusdam. Qui sunt magnam iure blanditiis. Et est non enim. Est ab vero dolor.",
+			"author": "jessjelly",
+			"votes": -1,
+			"created_at": "2020-08-12T22:10:00.000Z"
+		}
+	]
+} },
+  "POST /api/articles/:article_id/comments": {Description: "Posts new comment by article_id", requestSample: {"username": "happyamy2016", "body": "Wow that's incredible!"}, responseSample: {
+	"comment": {
+		"comment_id": 307,
+		"body": "Wow that's incredible!",
+		"article_id": 4,
+		"author": "happyamy2016",
+		"votes": 0,
+		"created_at": "2022-09-09T08:38:07.429Z"
+	}
+}},
+  "DELETE /api/comments/:comment_id": {Description: "Deletes comment by comment_id", requestSample: responseSample: {}}
 };
 
 
