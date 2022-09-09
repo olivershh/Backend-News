@@ -325,7 +325,7 @@ describe("/api/articles/:article_id/comments", () => {
     });
   });
   describe("POST", () => {
-    test.only("201: Returns comment when db is updated", () => {
+    test("201: Returns comment when db is updated", () => {
       const newComment = {
         username: "butter_bridge",
         body: "Wow that's so sick!",
@@ -344,7 +344,7 @@ describe("/api/articles/:article_id/comments", () => {
           expect(body.comment).toHaveProperty("created_at", expect.any(String));
         });
     });
-    test.only("201: comment is added to db", () => {
+    test("201: comment is added to db", () => {
       const newComment = {
         username: "butter_bridge",
         body: "Wow that's so sick!",
