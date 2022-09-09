@@ -35,7 +35,7 @@ PGDATABASE=<database_name_here_TEST>
 PGDATABASE=<database_name_here>
 ```
 
-note: .env files are included in .gitignore for security.
+note: .env files are included in .gitignore and so will remain local.
 
 `Installing dependencies`
 
