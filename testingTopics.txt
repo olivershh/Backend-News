@@ -1,0 +1,4 @@
+ /api/topics
+    GET
+      ✓ 200: Response follows correct format {topics: [...topics]} (112 ms)
+      ✓ 200: Returns array of topic objects (45 ms)

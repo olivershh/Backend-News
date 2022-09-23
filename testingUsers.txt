@@ -1,0 +1,4 @@
+  /api/users
+    GET:
+      ✓ 200: Response follows correct format {users: [...users]} (118 ms)
+      ✓ 200: Returns array of user objects with correct properties and data types (50 ms)

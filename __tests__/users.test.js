@@ -38,3 +38,42 @@ describe("/api/users", () => {
     });
   });
 });
+
+describe("/api/users/:username", () => {
+  describe("GET:", () => {
+    test("200: Response follows correct format {user: {...user}}", () => {
+      return request(app)
+        .get("/api/users/rogersop")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toHaveProperty("user", expect.any(Object));
+        });
+    });
+    test("200: Returns correct user object", () => {
+      return request(app)
+        .get("/api/users/rogersop")
+        .expect(200)
+        .then((response) => {
+          const { body } = response;
+          const expected = {
+            username: "rogersop",
+            name: "paul",
+            avatar_url:
+              "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+          };
+          expect(body.user).toEqual(expected);
+        });
+    });
+    test("If user does not exist, 'user not found' message is returned", () => {
+      return request(app)
+        .get("/api/users/oliver")
+        .expect(404)
+        .then((response) => {
+          const { body } = response;
+          const expected = { msg: "user not found" };
+          expect(body).toEqual(expected);
+        });
+    });
+  });
+});

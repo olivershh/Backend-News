@@ -9,6 +9,15 @@ afterAll(() => db.end());
 
 describe("/api/comments/:comment_id", () => {
   describe("GET:", () => {
+    test("204: Returns empty object on succesful delete", () => {
+      return request(app)
+        .delete("/api/comments/5")
+        .expect(204)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({});
+        });
+    });
     test("204: Comment is deleted from db", () => {
       return request(app)
         .delete("/api/comments/5")
@@ -19,15 +28,6 @@ describe("/api/comments/:comment_id", () => {
             .then((queryData) => {
               expect(queryData.rowCount).toBe(0);
             });
-        });
-    });
-    test("204: Returns empty object on succesful delete", () => {
-      return request(app)
-        .delete("/api/comments/5")
-        .expect(204)
-        .then((response) => {
-          const { body } = response;
-          expect(body).toEqual({});
         });
     });
     test("404: Returns error message if comment does not exist", () => {
