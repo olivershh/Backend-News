@@ -9,7 +9,7 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getUser = (req, res, next) => {
-  const username = req.params.username;
+  const { username } = req.params;
 
   selectUser(username)
     .then((user) => {

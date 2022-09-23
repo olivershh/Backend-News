@@ -194,13 +194,13 @@ describe("/api/articles/:article_id", () => {
           expect(body.article).toHaveProperty("comment_count", 0);
         });
     });
-    test("404: If article number does not exist, 'Article not found' message is returned.", () => {
+    test("404: If article number does not exist, 'article not found' message is returned.", () => {
       return request(app)
         .get("/api/articles/123456")
         .expect(404)
         .then((response) => {
           const { body } = response;
-          const expected = { msg: "Article not found" };
+          const expected = { msg: "article not found" };
           expect(body).toEqual(expected);
         });
     });
@@ -222,23 +222,28 @@ describe("/api/articles/:article_id", () => {
         .expect(200)
         .then((response) => {
           const { body } = response;
-          expect(body.article).toHaveProperty("author", expect.any(String));
-          expect(body.article).toHaveProperty("title", expect.any(String));
-          expect(body.article).toHaveProperty("article_id", 4);
-          expect(body.article).toHaveProperty("body", expect.any(String));
-          expect(body.article).toHaveProperty("topic", expect.any(String));
-          expect(body.article).toHaveProperty("created_at", expect.any(String));
-          expect(body.article).toHaveProperty("votes", 100);
+          const expected = {
+            article: {
+              article_id: 4,
+              title: "Student SUES Mitch!",
+              topic: "mitch",
+              author: "rogersop",
+              body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+              created_at: "2020-05-06T01:14:00.000Z",
+              votes: 100,
+            },
+          };
+          expect(body).toEqual(expected);
         });
     });
-    test("404: If article number does not exist, 'Article not found' message returned.", () => {
+    test("404: If article id does not exist, 'article not found' message returned.", () => {
       return request(app)
         .patch("/api/articles/123456")
         .send({ inc_votes: 100 })
         .expect(404)
         .then((response) => {
           const { body } = response;
-          expect(body).toEqual({ msg: "Article not found" });
+          expect(body).toEqual({ msg: "article not found" });
         });
     });
     test("400: If article id is invalid, bad request error is returned", () => {

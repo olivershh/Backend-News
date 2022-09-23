@@ -17,10 +17,10 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.patchArticleById = (req, res, next) => {
-  const articleID = req.params.article_id;
+  const { article_id } = req.params;
   const votes = req.body.inc_votes;
 
-  updateArticleById(articleID, votes)
+  updateArticleById(article_id, votes)
     .then((article) => {
       res.status(200).send({ article: article });
     })
@@ -28,9 +28,7 @@ exports.patchArticleById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  const topic = req.query.topic;
-  const order = req.query.order;
-  const sort_by = req.query.sort_by;
+  const { topic, order, sort_by } = req.query;
 
   selectArticles(topic, order, sort_by)
     .then((articles) => {
@@ -40,7 +38,7 @@ exports.getArticles = (req, res, next) => {
 };
 
 exports.getCommentsByArticleId = (req, res, next) => {
-  const article_id = req.params.article_id;
+  const { article_id } = req.params;
 
   selectCommentsByArticleId(article_id)
     .then((comments) => {
@@ -50,11 +48,10 @@ exports.getCommentsByArticleId = (req, res, next) => {
 };
 
 exports.postCommentByArticleId = (req, res, next) => {
-  const article_id = req.params.article_id;
-  const username = req.body.username;
-  const commentBody = req.body.body;
+  const { article_id } = req.params;
+  const { username, body } = req.body;
 
-  newCommentByArticleId(username, commentBody, article_id)
+  newCommentByArticleId(username, body, article_id)
     .then((comment) => {
       res.status(201).send({ comment: comment });
     })
