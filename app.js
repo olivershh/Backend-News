@@ -1,17 +1,12 @@
 const express = require("express");
 const app = express();
 
-const { getEndpoints } = require("./controllers/home.controller");
-const { getTopics } = require("./controllers/topics.controller");
-const {
-  getArticleById,
-  patchArticleById,
-  getArticles,
-  getCommentsByArticleId,
-  postCommentByArticleId,
-} = require("./controllers/articles.controller");
-const { getUsers } = require("./controllers/users.controller");
-const { deleteCommentById } = require("./controllers/comments.controller");
+const homeRouter = require("./routes/home-router");
+const topicsRouter = require("./routes/topics-router");
+const articlesRouter = require("./routes/articles-router");
+const commentsRouter = require("./routes/comments-router");
+const usersRouter = require("./routes/users-router");
+
 const {
   customErrorHandler,
   psqlErrorHandler,
@@ -20,20 +15,14 @@ const {
 
 app.use(express.json());
 
-app.get("/", getEndpoints);
+// routes
+app.use("/", homeRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/comments", commentsRouter);
+app.use("/api/articles", articlesRouter);
+app.use("/api/topics", topicsRouter); // DONE
 
-app.get("/api/topics", getTopics);
-
-app.get("/api/articles/:article_id", getArticleById);
-app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
-app.get("/api/articles", getArticles);
-app.patch("/api/articles/:article_id", patchArticleById);
-app.post("/api/articles/:article_id/comments", postCommentByArticleId);
-
-app.get("/api/users", getUsers);
-
-app.delete("/api/comments/:comment_id", deleteCommentById);
-
+//error handling
 app.use(psqlErrorHandler);
 app.use(customErrorHandler);
 app.use(uncaughtErrorHandler);
