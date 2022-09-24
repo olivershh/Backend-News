@@ -115,3 +115,18 @@ exports.newCommentByArticleId = async (username, commentBody, article_id) => {
 
   return queryData.rows[0];
 };
+
+exports.newArticle = async (article) => {
+  const { author, title, body, topic } = article;
+
+  const queryData = await db.query(
+    `INSERT INTO articles (author, title, body, topic) VALUES ($1, $2, $3, $4) returning article_id;`,
+    [author, title, body, topic]
+  );
+
+  const returnedId = queryData.rows[0].article_id;
+
+  const postedArticle = await this.selectArticleById(returnedId);
+
+  return postedArticle;
+};

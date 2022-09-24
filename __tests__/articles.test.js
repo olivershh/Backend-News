@@ -144,6 +144,133 @@ describe("/api/articles", () => {
         });
     });
   });
+  describe("POST:", () => {
+    test("201: Returns article with comment count when db is updated", () => {
+      const newArticle = {
+        author: "rogersop",
+        title: "Why pen and paper is the new javascript",
+        body: "In my opinion, anuything you can do with JS you can do with the classic pen and paper and a few years time",
+        topic: "cats",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(201)
+        .then((response) => {
+          const { body } = response;
+          expect(body.article).toHaveProperty("author", "rogersop");
+          expect(body.article).toHaveProperty(
+            "title",
+            "Why pen and paper is the new javascript"
+          );
+          expect(body.article).toHaveProperty(
+            "body",
+            "In my opinion, anuything you can do with JS you can do with the classic pen and paper and a few years time"
+          );
+          expect(body.article).toHaveProperty("topic", "cats");
+          expect(body.article).toHaveProperty("article_id", 13);
+          expect(body.article).toHaveProperty("votes", 0);
+          expect(body.article).toHaveProperty("created_at", expect.any(String));
+          expect(body.article).toHaveProperty("comment_count", 0);
+        });
+    });
+    test("201: Article is added to db", () => {
+      const newArticle = {
+        author: "rogersop",
+        title: "Why pen and paper is the new javascript",
+        body: "In my opinion, anuything you can do with JS you can do with the classic pen and paper and a few years time",
+        topic: "cats",
+      };
+      return request(app)
+        .post("/api/articles/")
+        .send(newArticle)
+        .expect(201)
+        .then((response) => {
+          return db.query("SELECT * FROM articles WHERE article_id = 13");
+        })
+        .then((queryData) => {
+          const body = queryData.rows[0];
+          expect(body).toHaveProperty("author", "rogersop");
+          expect(body).toHaveProperty(
+            "title",
+            "Why pen and paper is the new javascript"
+          );
+          expect(body).toHaveProperty(
+            "body",
+            "In my opinion, anuything you can do with JS you can do with the classic pen and paper and a few years time"
+          );
+          expect(body).toHaveProperty("topic", "cats");
+          expect(body).toHaveProperty("article_id", 13);
+          expect(body).toHaveProperty("votes", 0);
+          expect(body).toHaveProperty("created_at");
+        });
+    });
+    test("400: When article structure is invalid, returns 'bad request'", () => {
+      const newArticle = {
+        notavalidkey: "ddd",
+        mainBit: "Wow that's so sick!",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(400)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "bad request" });
+        });
+    });
+    test("400: When data is invalid, returns bad request", () => {
+      const newArticle = {
+        author: "rogersop",
+        title: "Why pen and paper is the new javascript",
+        body: null,
+        topic: "cats",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(400)
+        .then((response) => {
+          const { body } = response;
+          console.log(body);
+          expect(body).toEqual({ msg: "bad request" });
+        });
+    });
+    test.only("400: When author does not exist, returns 'author does not exist'", () => {
+      const newArticle = {
+        author: "JonathonSnow",
+        title: "Why pen and paper is the new javascript",
+        body: "Your level of knowledge very basic, Jonathon Snow.",
+        topic: "cats",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(404)
+        .then((response) => {
+          const { body } = response;
+          console.log(body);
+          expect(body).toEqual({ msg: "author does not exist" });
+        });
+    });
+    test.only("400: When topic does not exist, returns 'topic does not exist'", () => {
+      const newArticle = {
+        author: "rogersop",
+        title: "Why pen and paper is the new javascript",
+        body: "lorem ipsum",
+        topic: "game of thrones",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(404)
+        .then((response) => {
+          const { body } = response;
+          console.log(body);
+          expect(body).toEqual({ msg: "topic does not exist" });
+        });
+    });
+  });
 });
 
 describe("/api/articles/:article_id", () => {
@@ -375,20 +502,6 @@ describe("/api/articles/:article_id/comments", () => {
           expect(body).toHaveProperty("created_at");
         });
     });
-    test("404: When article does not exist, returns 'article_id does not exist'", () => {
-      const newComment = {
-        username: "butter_bridge",
-        body: "Wow that's so sick!",
-      };
-      return request(app)
-        .post("/api/articles/100/comments")
-        .send(newComment)
-        .expect(404)
-        .then((response) => {
-          const { body } = response;
-          expect(body).toEqual({ msg: "article_id does not exist" });
-        });
-    });
     test("400: When comment structure is invalid, returns 'bad request'", () => {
       const newComment = {
         theAuthorNotUser: "butter_bridge",
@@ -401,6 +514,20 @@ describe("/api/articles/:article_id/comments", () => {
         .then((response) => {
           const { body } = response;
           expect(body).toEqual({ msg: "bad request" });
+        });
+    });
+    test("404: When article does not exist, returns 'article_id does not exist'", () => {
+      const newComment = {
+        username: "butter_bridge",
+        body: "Wow that's so sick!",
+      };
+      return request(app)
+        .post("/api/articles/100/comments")
+        .send(newComment)
+        .expect(404)
+        .then((response) => {
+          const { body } = response;
+          expect(body).toEqual({ msg: "article_id does not exist" });
         });
     });
     test("404: When author does not exist, returns 'author does not exist'", () => {
