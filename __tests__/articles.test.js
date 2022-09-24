@@ -375,7 +375,7 @@ describe("/api/articles/:article_id/comments", () => {
           expect(body).toHaveProperty("created_at");
         });
     });
-    test("404: When article does not exist, returns 'does not exist'", () => {
+    test("404: When article does not exist, returns 'article_id does not exist'", () => {
       const newComment = {
         username: "butter_bridge",
         body: "Wow that's so sick!",
@@ -386,7 +386,7 @@ describe("/api/articles/:article_id/comments", () => {
         .expect(404)
         .then((response) => {
           const { body } = response;
-          expect(body).toEqual({ msg: "does not exist" });
+          expect(body).toEqual({ msg: "article_id does not exist" });
         });
     });
     test("400: When comment structure is invalid, returns 'bad request'", () => {
@@ -403,7 +403,7 @@ describe("/api/articles/:article_id/comments", () => {
           expect(body).toEqual({ msg: "bad request" });
         });
     });
-    test("404: When user does not exist, returns 'does not exist'", () => {
+    test("404: When author does not exist, returns 'author does not exist'", () => {
       const newComment = {
         username: "margarine_bridge",
         body: "Wow that's so sick!",
@@ -414,7 +414,7 @@ describe("/api/articles/:article_id/comments", () => {
         .expect(404)
         .then((response) => {
           const { body } = response;
-          expect(body).toEqual({ msg: "does not exist" });
+          expect(body).toEqual({ msg: "author does not exist" });
         });
     });
     test("400: When article number is invalid, returns 'bad request'", () => {

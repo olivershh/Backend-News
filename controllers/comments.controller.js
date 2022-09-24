@@ -3,22 +3,25 @@ const {
   updateComment,
 } = require("../models/comments.model");
 
-exports.deleteCommentById = (req, res, next) => {
+exports.deleteCommentById = async (req, res, next) => {
   const { comment_id } = req.params;
-  removeCommentById(comment_id)
-    .then(() => {
-      res.sendStatus(204);
-    })
-    .catch(next);
+
+  try {
+    await removeCommentById(comment_id);
+    res.sendStatus(204);
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.patchComment = (req, res, next) => {
+exports.patchComment = async (req, res, next) => {
   const { comment_id } = req.params;
-  const votes = req.body.inc_votes;
+  const { inc_votes } = req.body;
 
-  updateComment(comment_id, votes)
-    .then((comment) => {
-      res.status(200).send({ comment: comment });
-    })
-    .catch(next);
+  try {
+    const comment = await updateComment(comment_id, inc_votes);
+    res.status(200).send({ comment: comment });
+  } catch (err) {
+    next(err);
+  }
 };
