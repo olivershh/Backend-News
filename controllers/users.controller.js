@@ -1,19 +1,21 @@
 const { selectUsers, selectUser } = require("../models/users.model");
 
-exports.getUsers = (req, res, next) => {
-  selectUsers()
-    .then((users) => {
-      res.status(200).send({ users: users });
-    })
-    .catch(next);
+exports.getUsers = async (req, res, next) => {
+  try {
+    const users = await selectUsers();
+    res.status(200).send({ users: users });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.getUser = (req, res, next) => {
+exports.getUser = async (req, res, next) => {
   const { username } = req.params;
 
-  selectUser(username)
-    .then((user) => {
-      res.status(200).send({ user: user });
-    })
-    .catch(next);
+  try {
+    const user = await selectUser(username);
+    res.status(200).send({ user: user });
+  } catch (err) {
+    next(err);
+  }
 };
