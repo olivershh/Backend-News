@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 const homeRouter = require("./routes/home-router");
 const topicsRouter = require("./routes/topics-router");
@@ -14,6 +15,7 @@ const {
 } = require("./controllers/errors.controllers");
 
 app.use(express.json());
+app.use(cors());
 
 // routes
 app.use("/", homeRouter);
