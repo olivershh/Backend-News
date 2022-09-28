@@ -55,6 +55,7 @@ exports.selectArticles = async (
       "body",
       "created_at",
       "votes",
+      "comment_count",
     ].includes(sortBy)
   ) {
     return Promise.reject({ status: 400, msg: "bad request" });
