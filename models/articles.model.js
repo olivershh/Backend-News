@@ -86,7 +86,7 @@ exports.selectArticles = async (
 
 exports.selectCommentsByArticleId = async (article_id) => {
   const queryData = await db.query(
-    "SELECT comment_id, body, author, votes, created_at FROM comments WHERE article_id = $1",
+    "SELECT comment_id, body, author, votes, created_at FROM comments WHERE article_id = $1 ORDER BY created_at DESC",
     [article_id]
   );
 

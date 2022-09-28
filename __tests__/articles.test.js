@@ -411,6 +411,7 @@ describe("/api/articles/:article_id/comments", () => {
         .expect(200)
         .then((response) => {
           const { body } = response;
+          console.log(body);
           expect(body).toEqual(
             expect.objectContaining({ comments: expect.any(Array) })
           );
