@@ -93,9 +93,10 @@ exports.selectCommentsByArticleId = async (article_id) => {
   const comments = queryData.rows;
   if (comments.length !== 0) return comments;
 
-  const data = await db.query("SELECT * FROM articles WHERE article_id = $1", [
-    article_id,
-  ]);
+  const data = await db.query(
+    "SELECT * FROM articles WHERE article_id = $1 ORDER BY created_at DESC",
+    [article_id]
+  );
 
   if (data.rowCount !== undefined) {
     if (data.rowCount > 0) {

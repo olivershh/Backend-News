@@ -232,11 +232,10 @@ describe("/api/articles", () => {
         .expect(400)
         .then((response) => {
           const { body } = response;
-          console.log(body);
           expect(body).toEqual({ msg: "bad request" });
         });
     });
-    test.only("400: When author does not exist, returns 'author does not exist'", () => {
+    test("400: When author does not exist, returns 'author does not exist'", () => {
       const newArticle = {
         author: "JonathonSnow",
         title: "Why pen and paper is the new javascript",
@@ -249,11 +248,10 @@ describe("/api/articles", () => {
         .expect(404)
         .then((response) => {
           const { body } = response;
-          console.log(body);
           expect(body).toEqual({ msg: "author does not exist" });
         });
     });
-    test.only("400: When topic does not exist, returns 'topic does not exist'", () => {
+    test("400: When topic does not exist, returns 'topic does not exist'", () => {
       const newArticle = {
         author: "rogersop",
         title: "Why pen and paper is the new javascript",
@@ -266,7 +264,6 @@ describe("/api/articles", () => {
         .expect(404)
         .then((response) => {
           const { body } = response;
-          console.log(body);
           expect(body).toEqual({ msg: "topic does not exist" });
         });
     });

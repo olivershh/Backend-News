@@ -1,6 +1,0 @@
-  /api/comments/:comment_id
-    GET:
-      ✓ 204: Returns empty object on succesful delete (49 ms)
-      ✓ 204: Comment is deleted from db (117 ms)
-      ✓ 404: Returns error message if comment does not exist (37 ms)
-      ✓ 400: Returns error message if comment_id is invalid (35 ms)
